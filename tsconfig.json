@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "lib": ["esnext"],
+    "module": "nodenext",
+    "target": "es2022",
+
+    "allowJs": true,
+    "checkJs": true,
+    "strict": true,
+
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "nodenext",
+    "resolveJsonModule": true,
+
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts", "src/**/*.js"]
+}
