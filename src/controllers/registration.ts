@@ -1,11 +1,7 @@
 import type { Request, Response } from "express";
 import { prisma } from "../db-client.js";
-import * as argon from "argon2";
-import * as crypto from "node:crypto";
-import {
-  generateAccessToken,
-  generateRefreshToken,
-} from "../services/token.service.js";
+import { createSession } from "../services/session.service.js";
+import { hashPassword } from "../services/password.service.js";
 
 export async function registrationHandler(req: Request, res: Response) {
   const params = req.body;
@@ -20,32 +16,25 @@ export async function registrationHandler(req: Request, res: Response) {
     return res.status(422).json(errorResponse);
   }
 
-  const user = await prisma.user.findFirst({
+  let user = await prisma.user.findFirst({
     where: { username: params.username },
   });
   if (user) {
     return res.status(422).json(errorResponse);
   }
 
-  const sessionKey = crypto.randomBytes(20).toString("hex");
-  await prisma.user.create({
+  user = await prisma.user.create({
     data: {
       name: params.name || "",
       username: params.username,
-      passwordHash: await argon.hash(params.password),
-      sessions: {
-        create: {
-          key: sessionKey,
-        },
-      },
+      passwordHash: await hashPassword(params.password),
     },
   });
 
-  const accessToken = generateAccessToken(sessionKey, "secret");
-  const refreshToken = generateRefreshToken(sessionKey, "secret");
+  const tokens = await createSession(user);
 
   res.status(201).json({
-    access: accessToken,
-    refresh: refreshToken,
+    access: tokens.accessToken,
+    refresh: tokens.refreshToken,
   });
 }
