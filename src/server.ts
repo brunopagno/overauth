@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { registrationHandler } from "./routes/registration.js";
 import { unregistrationHandler } from "./routes/unregistration.js";
+import { authenticate } from "./middlewares/authenticated.middleware.js";
 
 if (process.env.NODE_ENV !== "production") {
   console.log("loading dotenv");
@@ -18,7 +19,7 @@ app.get("/", (_req, res) => {
 });
 
 app.post("/register", registrationHandler);
-app.post("/unregister", unregistrationHandler);
+app.post("/unregister", [authenticate, unregistrationHandler]);
 // app.post("/login", ...);
 // app.post("/logout", ...);
 // app.post("/validate", ...);

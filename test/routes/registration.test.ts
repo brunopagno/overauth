@@ -1,6 +1,7 @@
 import { describe, test, expect, beforeAll, afterEach } from "vitest";
 import { app } from "../../src/server.js";
 import request from "supertest";
+import type { Response } from "supertest";
 import { Session, User } from "@prisma/client";
 import { prisma } from "../../src/db-client.js";
 import * as argon from "argon2";
