@@ -1,7 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
-import { registrationHandler } from "./routes/registration.js";
-import { unregistrationHandler } from "./routes/unregistration.js";
+import { registrationHandler } from "./controllers/registration.js";
+import { unregistrationHandler } from "./controllers/unregistration.js";
+import { loginHandler } from "./controllers/login.js";
 import { authenticate } from "./middlewares/authenticated.middleware.js";
 
 if (process.env.NODE_ENV !== "production") {
@@ -20,7 +21,7 @@ app.get("/", (_req, res) => {
 
 app.post("/register", registrationHandler);
 app.post("/unregister", [authenticate, unregistrationHandler]);
-// app.post("/login", ...);
+app.post("/login", loginHandler);
 // app.post("/logout", ...);
 // app.post("/validate", ...);
 // app.post("/represh", ...);
