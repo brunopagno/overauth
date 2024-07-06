@@ -1,8 +1,9 @@
-import { describe, expect, test, beforeAll } from "vitest";
+import { describe, expect, test, beforeAll, vi } from "vitest";
 import {
   generateToken,
   generateAccessToken,
   generateRefreshToken,
+  validateToken,
 } from "../../src/services/token.service";
 import * as crypto from "node:crypto";
 import * as jwt from "jsonwebtoken";
@@ -78,5 +79,36 @@ describe("refreshToken", () => {
     expect(decoded.type).toEqual("refresh");
     expect(decoded.exp).toBeGreaterThan(Date.now() / 1000);
     expect(decoded.exp).toBeLessThan(Date.now() / 1000 + 60 * 60 * 24);
+  });
+});
+
+describe("validate token", () => {
+  test("returns null for invalid token", () => {
+    const token = validateToken("invalid", "secret");
+    expect(token).toBeNull();
+  });
+
+  test("returns null for wrong secret", () => {
+    const validToken = generateToken("1234", "access", "secret", 10);
+    const token = validateToken(validToken, "wrong secret");
+    expect(token).toBeNull();
+  });
+
+  test("returns null for expired token", () => {
+    const validToken = generateToken("1234", "access", "secret", 10);
+
+    vi.setSystemTime(Date.now() + 60 * 1000);
+
+    const token = validateToken(validToken, "secret");
+    expect(token).toBeNull();
+
+    vi.useRealTimers();
+  });
+
+  test("returns the token payload when successful", () => {
+    const validToken = generateToken("1234", "access", "secret", 60);
+    const token = validateToken(validToken, "secret")!;
+    expect(token.sub).toEqual("1234");
+    expect(token.type).toEqual("access");
   });
 });

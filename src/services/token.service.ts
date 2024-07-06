@@ -30,3 +30,19 @@ export function generateToken(
     expiresIn,
   });
 }
+
+/**
+ * @param token
+ * @param secret
+ * @returns null if token is invalid, otherwise the token type
+ */
+export function validateToken(
+  token: string,
+  secret: string,
+): jwt.JwtPayload | null {
+  try {
+    return jwt.verify(token, secret) as jwt.JwtPayload;
+  } catch (e) {
+    return null;
+  }
+}
