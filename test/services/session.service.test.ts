@@ -3,12 +3,12 @@ import {
   createSession,
   destroySession,
 } from "../../src/services/session.service";
+import request from "supertest";
+import { authenticate } from "../../src/middlewares/authenticated.middleware.ts";
+import { generateAccessToken } from "../../src/services/token.service";
 import { prisma } from "../../src/db-client";
+import express from "express";
 import * as jwt from "jsonwebtoken";
-import {
-  generateAccessToken,
-  validateToken,
-} from "../../src/services/token.service";
 
 describe("session service", () => {
   afterEach(async () => {
@@ -59,6 +59,38 @@ describe("session service", () => {
       await destroySession(session);
 
       expect(await prisma.session.count()).toBe(0);
+    });
+
+    test("does not authenticate tokens using that session", async () => {
+      const session = await prisma.session.create({
+        data: {
+          key: "qwer",
+          user: {
+            create: {
+              name: "Alice",
+              username: "aliceinwonderland",
+              passwordHash: "notreallyahash",
+            },
+          },
+        },
+      });
+      const token = generateAccessToken("qwer", "secret");
+
+      const app = express();
+      app.use(authenticate);
+      app.get("/", (_, res) => res.send(200));
+
+      await request(app)
+        .get("/")
+        .set("Authorization", `Bearer ${token}`)
+        .expect(200);
+
+      await destroySession(session);
+
+      await request(app)
+        .get("/")
+        .set("Authorization", `Bearer ${token}`)
+        .expect(401);
     });
   });
 });
