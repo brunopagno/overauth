@@ -13,11 +13,11 @@ export async function loginHandler(req: Request, res: Response) {
     where: { username: username },
   });
   if (!user) {
-    return res.status(403).send("Unauthorized");
+    return res.status(401).send("Unauthorized");
   }
   const validPassword = await validatePassword(user.passwordHash, password);
   if (!validPassword) {
-    return res.status(403).send("Unauthorized");
+    return res.status(401).send("Unauthorized");
   }
 
   const tokens = await createSession(user);

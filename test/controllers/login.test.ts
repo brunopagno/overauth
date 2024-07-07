@@ -28,7 +28,7 @@ describe("/login", () => {
     await request(app)
       .post("/login")
       .send({ username: "username", password: "password" })
-      .expect(403);
+      .expect(401);
   });
 
   test("returns an error when the password does not match", async () => {
@@ -43,7 +43,7 @@ describe("/login", () => {
     await request(app)
       .post("/login")
       .send({ username: "envy", password: "notthepassword" })
-      .expect(403);
+      .expect(401);
   });
 
   test("creates a new session and returns a pair of tokens when successful", async () => {
