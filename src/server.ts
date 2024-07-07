@@ -22,6 +22,6 @@ app.get("/", (_req, res) => {
 app.post("/register", registrationHandler);
 app.post("/unregister", [authenticate, unregistrationHandler]);
 app.post("/login", loginHandler);
-// app.post("/logout", ...);
+// app.post("/logout", [authenticate, logoutHandler]);
 // app.post("/validate", ...);
 // app.post("/represh", ...);

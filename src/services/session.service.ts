@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { Session, User } from "@prisma/client";
 import { prisma } from "../db-client.js";
 import { generateAccessToken, generateRefreshToken } from "./token.service.js";
 
@@ -22,4 +22,10 @@ export async function createSession(user: User) {
   const refreshToken = generateRefreshToken(sessionKey, "secret");
 
   return { accessToken, refreshToken };
+}
+
+export async function destroySession(session: Session) {
+  await prisma.session.delete({
+    where: { id: session.id },
+  });
 }
