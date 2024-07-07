@@ -6,6 +6,7 @@ import { logoutHandler } from "./controllers/logout.js";
 import { validateHandler } from "./controllers/validate.js";
 import { registerHandler } from "./controllers/register.js";
 import { unregisterHandler } from "./controllers/unregister.js";
+import { refreshHandler } from "./controllers/refresh.js";
 
 if (process.env.NODE_ENV !== "production") {
   console.log("loading dotenv");
@@ -26,4 +27,4 @@ app.post("/unregister", [authenticate, unregisterHandler]);
 app.post("/login", loginHandler);
 app.post("/logout", [authenticate, logoutHandler]);
 app.post("/validate", [authenticate, validateHandler]);
-// app.post("/refresh", ...);
+app.post("/refresh", refreshHandler);
