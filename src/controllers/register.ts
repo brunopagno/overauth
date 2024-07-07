@@ -3,7 +3,7 @@ import { prisma } from "../db-client.js";
 import { createSession } from "../services/session.service.js";
 import { hashPassword } from "../services/password.service.js";
 
-export async function registrationHandler(req: Request, res: Response) {
+export async function registerHandler(req: Request, res: Response) {
   const params = req.body;
 
   const errorResponse = { message: "nop, sorry" };

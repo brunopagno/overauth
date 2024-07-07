@@ -1,11 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
 import { authenticate } from "./middlewares/authenticated.middleware.js";
-import { registrationHandler } from "./controllers/registration.js";
-import { unregistrationHandler } from "./controllers/unregistration.js";
 import { loginHandler } from "./controllers/login.js";
 import { logoutHandler } from "./controllers/logout.js";
 import { validateHandler } from "./controllers/validate.js";
+import { registerHandler } from "./controllers/register.js";
+import { unregisterHandler } from "./controllers/unregister.js";
 
 if (process.env.NODE_ENV !== "production") {
   console.log("loading dotenv");
@@ -21,8 +21,8 @@ app.get("/", (_req, res) => {
   res.send(JSON.stringify({ status: "healthy" }));
 });
 
-app.post("/register", registrationHandler);
-app.post("/unregister", [authenticate, unregistrationHandler]);
+app.post("/register", registerHandler);
+app.post("/unregister", [authenticate, unregisterHandler]);
 app.post("/login", loginHandler);
 app.post("/logout", [authenticate, logoutHandler]);
 app.post("/validate", [authenticate, validateHandler]);
