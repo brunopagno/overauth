@@ -35,7 +35,7 @@ describe("generateToken", () => {
 
   test("it fails to verify in case of different secret", () => {
     expect(() => jwt.verify(token, "different secret")).toThrowError(
-      "invalid signature",
+      "invalid signature"
     );
   });
 });

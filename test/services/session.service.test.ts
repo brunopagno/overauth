@@ -31,7 +31,7 @@ describe("session service", () => {
       const access = jwt.verify(tokens.accessToken, "secret") as jwt.JwtPayload;
       const refresh = jwt.verify(
         tokens.refreshToken,
-        "secret",
+        "secret"
       ) as jwt.JwtPayload;
 
       expect(await prisma.session.count()).toBe(1);

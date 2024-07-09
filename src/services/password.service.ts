@@ -6,7 +6,7 @@ export async function hashPassword(password: string): Promise<string> {
 
 export async function validatePassword(
   hash: string,
-  password: string,
+  password: string
 ): Promise<boolean> {
   return await argon.verify(hash, password);
 }
